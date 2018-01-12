@@ -19,20 +19,21 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./output_images/ChessDist.png "Undistorted"
-[image11]: ./output_images/Undistorted.png "Undistorted Camera Image"
-[image2]: ./output_images/straight_lines1.jpg "Road Original"
-[image3o1]: ./output_images/sobel-operator.png "Sobel Operator"
-[image3a1]: ./output_images/sobel_x.png "Sobel x-axis"
-[image3a2]: ./output_images/sobel_y.png "Sobel y-axis"
-[image3a3]: ./output_images/sobel_mag.png "Sobel Magnitude of Gradient"
-[image3a4]: ./output_images/ThreshGradDir.png "Sobel Direction of Gradient"
-[image3]: ./output_images/CombinedGrad.png "Binary Example"
-[image31]:./output_images/AllThress.png "Combined Thressholds"
-[image4]: ./output_images/Warped.png "Warp Example"
-[image5]: ./output_images/warped_wt_lanelines_2.png "Fit Visual"
-[image6]: ./output_images/PipelineOnImages.png "Output"
-[video1]: ./project_video.mp4 "Video"
+[image1]: ./output_images/ChessboardUndistorted.png "Chessboard Undistorted Example"
+[image11]: ./output_images/RoadUndistorted.png "Undistorted Camera Image"
+[image2]: ./output_images/StraightLines1.jpg "Road Original Image"
+[image3o1]: ./output_images/SobelOperator.png "Sobel Operator"
+[image3a1]: ./output_images/SobelX.png "Sobel x-axis"
+[image3a2]: ./output_images/SobelY.png "Sobel y-axis"
+[image3a3]: ./output_images/SobelMag.png "Sobel Magnitude of Gradient"
+[image3a4]: ./output_images/SobelDir.png "Sobel Direction of Gradient"
+[image3]: ./output_images/CombinedGrad.png "Combined Gradient Binary Example"
+[image31]:./output_images/AllThresholds.png "Combined Thressholds"
+[image4]: ./output_images/Warped.png "Warped Image Example"
+[image5]: ./output_images/WarpedWtLanelines.png "Warped Image Example wt Lane Lines"
+[image6]: ./output_images/PipelineOnImages.png "Output Images"
+[image7]: ./output_images/OutputVideo.png "Output Video"
+[video1]: ./output_video.mp4 "Video"
 
 The project includes the following files:
 * **P4.ipynb** containing the project pipeline in jupyter notebook format
@@ -68,7 +69,7 @@ The output `objpoints` and `imgpoints` were used to compute the camera calibrati
 * **Lane area drawing** ( function `draw_lane_area()`)
 * **Lane data printing**  ( function `print_lane_data()`)
 
-### Image Processing
+### Image Processing ( function `Image_Processing()`)
 
 #### 1. Correcting for Distortion ( function `cal_undistort()`)
 
@@ -181,7 +182,7 @@ Example of an original binary image, a warped image and a warped image with prin
 
 ![alt text][image5]
 
-### Lane curvature calculation
+### Lane curvature calculation/data printing
 
 Τhe curvature of the identified lane lines was calculated using the the function `calc_curvature()` that contains code based on the [lesson notes](https://classroom.udacity.com/nanodegrees/nd013/parts/fbf77062-5703-404e-b60c-95b78b2f3f9e/modules/2b62a1c3-e151-4a0e-b6b6-e424fa46ceab/lessons/40ec78ee-fb7c-4b53-94a8-028c5c60b858/concepts/2f928913-21f6-4611-9055-01744acc344f). Τo measure the radius of curvature of the polynomial curve f(y)=Ay^2 + By + C closest to the vehicle, we used the y curve values corresponding to the bottom of each image into the formula: R_curve = ( (1+(2 A y+B)^2)^3/2 ) / |2Α|.
 
@@ -194,7 +195,7 @@ xm_per_pix = 3.7/700 # meters per pixel in x dimension
 
 The curvature results vary from 1km to 4km in normal curvature lanes. However one will notice that in case of straight lines the curvature tends to get very high values. This is explained if one thinks of the curvature as the radius of a circle. Straight lines would correspond to line segments of a circle with really big radius.
 
-Radius results as well as distance with respect to the center are printed in each figure using the function `print_lane_data()` and can be seen in the example figures below.   
+Radius results as well as position of the vehicle with respect to the center of each frame are printed in each picture using the function `print_lane_data()` and can be seen in the example figures below.   
 
 ### Final pipeline tested on images
 
@@ -202,12 +203,18 @@ Radius results as well as distance with respect to the center are printed in eac
 
 ### Final pipeline tested on video
 
-#### 1. Provide a link to your final video output.  
+Finally the pipeline was successfully tested on the project video. A link of the output video can be found [here](https://github.com/akostarigka/P4-AdvancedLaneLines/blob/master/output_video.mp4).
 
-Here's a [link to the video result](./project_video.mp4)
+![alt text][image7]
+
+#### Problems / Issues
+
+During the implementation of the project, the following problems/issues were encountered:
+
+* In the output video, a "jump around" of lines within frames was noticed in some instances. This could be avoided by taking the average over *n* past measurements and smoothening the results to obtain a cleaner picture.
+* In case of straight lines the curvatures appears to be abnormally high. Even though this can be explained (straight lines correspond to line segments of a circle with really big radius) it provides distracting information and should be considered further.
+* The implementation could be more robust with the use of a `Line()` class as suggested on the lecture notes. This way we could keep track of parameters needed from frame to frame without having to use global lists like `l_list` and `r_list` used in our pipeline.
 
 ### Conclusion/Discussion
 
-#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
-
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+In this project we have employed some advanced techniques to detect and plot lane lines on a figure and  subsequently on a video. To benefit the most out of each image we un-distorted them using a camera calibration matrix obtained from a set of chessboard calibration images, then we thresholded them using a combination of gradient (Sobel Operator) and color space thresholds and in the end we performed a perspective transform to warp them into a "bird-eye view". Finally in the resulting thresholded warped image we were able to detect the lane lines, fit a polynomial and calculate their curvature. The pipeline was tested both on images and a video and could successfully demonstrate the effectiveness of the approach.     
