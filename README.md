@@ -189,11 +189,14 @@ Example of an original binary image, a warped image and a warped image with prin
 Finally, to transform the derived values from pixels into real world space units we used the conversions:
 
 ```python
-ym_per_pix = 30/720  # meters per pixel in y dimension
-xm_per_pix = 3.7/700 # meters per pixel in x dimension
+ym_per_pix = 15/720  # meters per pixel in y dimension
+
+# Calculate lane_width based on the lane detections
+lane_width = right_fitx[-1] - left_fitx[-1]
+xm_per_pix = 3.7/lane_width  # meters per pixel in x dimension
 ```
 
-The curvature results vary from 1km to 3km in normal curvature lanes. However one will notice that in case of straight lines the curvature tends to get very high values. This is explained if one thinks of the curvature as the radius of a circle. Straight lines would correspond to line segments of a circle with really big radius.
+The curvature results vary from 0.25km to 0.5km in normal curvature lanes. However one will notice that in case of straight lines the curvature tends to get very high values. This is explained if one thinks of the curvature as the radius of a circle. Straight lines would correspond to line segments of a circle with really big radius.
 
 Radius results as well as position of the vehicle with respect to the center of each frame are printed in each picture using the function `print_lane_data()` and can be seen in the example figures below.   
 
