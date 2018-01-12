@@ -173,7 +173,7 @@ To verify that perspective transform worked as expected, we plotted the `src` an
 
 #### Locate lane lines and fit a polynomial
 
-After retrieving an undistorted, thresholded, warped binary image we used the following methods to detect the lane lines (code mainly taken from the [lesson notes](https://classroom.udacity.com/nanodegrees/nd013/parts/fbf77062-5703-404e-b60c-95b78b2f3f9e/modules/2b62a1c3-e151-4a0e-b6b6-e424fa46ceab/lessons/40ec78ee-fb7c-4b53-94a8-028c5c60b858/concepts/c41a4b6b-9e57-44e6-9df9-7e4e74a1a49a)):
+After retrieving an undistorted, thresholded, warped binary image we used the following methods to detect the lane lines (code mainly taken from the [lecture notes](https://classroom.udacity.com/nanodegrees/nd013/parts/fbf77062-5703-404e-b60c-95b78b2f3f9e/modules/2b62a1c3-e151-4a0e-b6b6-e424fa46ceab/lessons/40ec78ee-fb7c-4b53-94a8-028c5c60b858/concepts/c41a4b6b-9e57-44e6-9df9-7e4e74a1a49a)):
 
 * **Identify peaks in a Histogram and use Sliding Window ( function `find_lane_lines_ini()`):** this method was used as a starting point, to identify where the lane lines are and fit a polynomial. This why it is called `find_lane_lines_ini()`. Once we had the location of a valid lane line pair we could use the function `find_lane_lines()`.
 * **Search in a margin around the previous line positions ( function `find_lane_lines()`):** this method was used only after we had identified the lane lines of a frame. In this case, instead of doing a "blind search", we skipped the sliding window step and searched in a margin around the previous line positions. This way we would improve speed and provide a more robust method for rejecting outliers.
@@ -184,7 +184,7 @@ Example of an original binary image, a warped image and a warped image with prin
 
 ### Lane curvature calculation/data printing
 
-Τhe curvature of the identified lane lines was calculated using the the function `calc_curvature()` that contains code based on the [lesson notes](https://classroom.udacity.com/nanodegrees/nd013/parts/fbf77062-5703-404e-b60c-95b78b2f3f9e/modules/2b62a1c3-e151-4a0e-b6b6-e424fa46ceab/lessons/40ec78ee-fb7c-4b53-94a8-028c5c60b858/concepts/2f928913-21f6-4611-9055-01744acc344f). Τo measure the radius of curvature of the polynomial curve f(y)=Ay^2 + By + C closest to the vehicle, we used the y curve values corresponding to the bottom of each image into the formula: R_curve = ( (1+(2 A y+B)^2)^3/2 ) / |2Α|.
+Τhe curvature of the identified lane lines was calculated using the the function `calc_curvature()` that contains code based on the [lecture notes](https://classroom.udacity.com/nanodegrees/nd013/parts/fbf77062-5703-404e-b60c-95b78b2f3f9e/modules/2b62a1c3-e151-4a0e-b6b6-e424fa46ceab/lessons/40ec78ee-fb7c-4b53-94a8-028c5c60b858/concepts/2f928913-21f6-4611-9055-01744acc344f). Τo measure the radius of curvature of the polynomial curve f(y)=Ay^2 + By + C closest to the vehicle, we used the y curve values corresponding to the bottom of each image into the formula: R_curve = ( (1+(2 A y+B)^2)^3/2 ) / |2Α|.
 
 Finally, to transform the derived values from pixels into real world space units we used the conversions:
 
@@ -193,7 +193,7 @@ ym_per_pix = 30/720  # meters per pixel in y dimension
 xm_per_pix = 3.7/700 # meters per pixel in x dimension
 ```
 
-The curvature results vary from 1km to 4km in normal curvature lanes. However one will notice that in case of straight lines the curvature tends to get very high values. This is explained if one thinks of the curvature as the radius of a circle. Straight lines would correspond to line segments of a circle with really big radius.
+The curvature results vary from 1km to 3km in normal curvature lanes. However one will notice that in case of straight lines the curvature tends to get very high values. This is explained if one thinks of the curvature as the radius of a circle. Straight lines would correspond to line segments of a circle with really big radius.
 
 Radius results as well as position of the vehicle with respect to the center of each frame are printed in each picture using the function `print_lane_data()` and can be seen in the example figures below.   
 
@@ -212,9 +212,9 @@ Finally the pipeline was successfully tested on the project video. A link of the
 During the implementation of the project, the following problems/issues were encountered:
 
 * In the output video, a "jump around" of lines within frames was noticed in some instances. This could be avoided by taking the average over *n* past measurements and smoothening the results to obtain a cleaner picture.
-* In case of straight lines the curvatures appears to be abnormally high. Even though this can be explained (straight lines correspond to line segments of a circle with really big radius) it provides distracting information and should be considered further.
-* The implementation could be more robust with the use of a `Line()` class as suggested on the lecture notes. This way we could keep track of parameters needed from frame to frame without having to use global lists like `l_list` and `r_list` used in our pipeline.
+* In case of straight lines the curvatures appear to be abnormally high. Even though this can be explained (straight lines correspond to line segments of a circle with really big radius), it provides distracting information and should be considered further.
+* The implementation could be more robust with the use of a `Line()` class as suggested in the lecture notes. This way we could keep track of parameters needed from frame to frame without having to use global lists like `l_list` and `r_list` as implemented in the project pipeline.
 
 ### Conclusion/Discussion
 
-In this project we have employed some advanced techniques to detect and plot lane lines on a figure and  subsequently on a video. To benefit the most out of each image we un-distorted them using a camera calibration matrix obtained from a set of chessboard calibration images, then we thresholded them using a combination of gradient (Sobel Operator) and color space thresholds and in the end we performed a perspective transform to warp them into a "bird-eye view". Finally in the resulting thresholded warped image we were able to detect the lane lines, fit a polynomial and calculate their curvature. The pipeline was tested both on images and a video and could successfully demonstrate the effectiveness of the approach.     
+In this project we have employed some advanced techniques to detect and plot lane lines on a figure and  subsequently on a video. To benefit the most out of each image we un-distorted them using a camera calibration matrix obtained from a set of chessboard calibration images, then we thresholded them using a combination of gradient (Sobel Operator) and color space thresholds and in the end we performed a perspective transform to warp them into a "bird-eye view". In the resulting thresholded warped image we were finally able to detect the lane lines, fit a polynomial and calculate their curvature. The pipeline was tested both on images and a video and could successfully demonstrate the effectiveness of the approach.     
